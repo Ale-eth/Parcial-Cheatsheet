@@ -1,63 +1,94 @@
 // a) Considerando solo las columnas que tienen caracteres letra minúscula, se pide obtener el número de la columna que tiene la menor cantidad de consonantes menores al caracter ‘m’.
 //  b) Determinar si en un arreglo dado de caracteres letra minúscula ordenado ascendente, están todas las consonantes incluídas en la columna correspondiente al número de columna obtenido en a).
-//  Observaciones: _el tamaño del arreglo es igual a la cantidad de columnas de la matriz, _la matriz y el arreglo están precargados, _realizar el programa completo bien modularizado sin métodos de carga e impresión de matriz, ni utilizar estructuras auxiliares.
-public class Tema2HechoPorMi {
-    public static int MAXFILAS = 5;
-    public static int MAXCOL = 7;
+
+//  Observaciones: _el tamaño del arreglo es igual a la cantidad de columnas de la matriz,
+//                 _la matriz y el arreglo están precargados,
+//                 _realizar el programa completo bien modularizado sin métodos de carga e impresión de matriz, ni utilizar estructuras auxiliares.
+
+public class tema2 {
+
+    final static int MAXCOL = 10;
+    final static int MAXFIL = 10;
+
+    static int menos_m = -1;
+    static int col_menos_m = -1;
 
     public static void main(String[] args) {
-        char[][] mat = new char[MAXFILAS][MAXCOL];
+        char[][] mat = new char[MAXFIL][MAXCOL];
         char[] arr = new char[MAXCOL];
 
-        boolean todas_letras_minusculas = true;
+        cargar_matriz();
+        cargar_arreglo();
+        imprimir_matriz();
 
-        int cantidad_consonantes_menores_m = 0;
-        int min_cantidad_consonantes_menores_m = 0;
-        int col_menos_consonantes_menores_m = -1;
+        recorrer_mat(mat);
+        recorrer_col(mat, arr);
 
-        int fila = 0;
-        for (int c = 0; c <= MAXCOL; c++){
-            fila = 0;
-            while (fila <= MAXFILAS && todas_letras_minusculas == true){
-                if((mat[fila][c] >= 'a' && mat[fila][c] <= 'z')){
-                    todas_letras_minusculas = true;
+    }
 
-                    if(!es_vocal(mat[fila][c]) && mat[fila][c] < 'm'){
-                        cantidad_consonantes_menores_m++;
-                    }
-                }else{
-                    todas_letras_minusculas = false;
+    // Parte A
+    public static void recorrer_mat(char[][]mat){
+        for(int c=0; c<= MAXCOL; c++){
+            if(comprobar_col_todas_min(c, mat)){
+                if(comprobar_cantidad_menores_m(mat, c) >= menos_m){
+                    col_menos_m = c;
                 }
-                fila++;
             }
 
-            if(cantidad_consonantes_menores_m < min_cantidad_consonantes_menores_m){
-                min_cantidad_consonantes_menores_m = cantidad_consonantes_menores_m;
-                col_menos_consonantes_menores_m = c;
+        }
+    }
+
+    public static boolean comprobar_col_todas_min(int col, char[][]mat){
+        int f = 0;
+        int max_cons_menores_m = MAXFIL;
+
+        while(f <= MAXFIL){
+            if(mat[f][col] < 'a' && mat[f][col] > 'z'){
+                max_cons_menores_m--;
+            }
+            f++;
+        }
+
+        return max_cons_menores_m == 0;
+    }
+
+    public static int comprobar_cantidad_menores_m(char[][]mat, int col){
+        int f = 0;
+        int cant_menor_m = 0;
+
+        while(f <= MAXFIL){
+            if(mat[f][col] > 'm' && mat[f][col] < 'z'){
+                cant_menor_m++;
             }
         }
 
-        comprobar_todas_consonantes_en_arreglo(col_menos_consonantes_menores_m, arr, mat, cantidad_consonantes_menores_m);
-
+        return cant_menor_m;
     }
 
-    public static boolean es_vocal(char letra){
-        return (letra == 'a' || letra == 'e' || letra == 'i' || letra == 'o' || letra == 'u');
+    // Parte B
+    public static void recorrer_col(char[][] mat, char[]arr){
+        for(int f=0; f<=MAXFIL; f++){
+            if(mat[f][col_menos_m] != 'a' && mat[f][col_menos_m] != 'e' && mat[f][col_menos_m] != 'i' && mat[f][col_menos_m] != 'o' && mat[f][col_menos_m] != 'u') {
+                comprobar_si_existe_en_arreglo(mat[f][col_menos_m], arr);
+            }
+        }
     }
-
-    public static boolean comprobar_todas_consonantes_en_arreglo(int col, char[] arr, char[][] mat, int cantidad_consonantes){
-        int consonantes = cantidad_consonantes;
+    public static boolean comprobar_si_existe_en_arreglo(char caracter, char[] arr){
         boolean encontrado = false;
-        int total
-        for(int f=0; f<= MAXFILAS; f++){
-            for(int c=0; c<= arr.length; c++){
-                if(mat[f][col] == arr[c]){
-                    consonantes--;
-                }
+        for(int c=0; c<= MAXCOL; c++){
+            if(caracter == arr[c]){
+                encontrado = true;
+                break;
+            }else{
+                encontrado = false;
             }
         }
-        if(consonantes < cantidad_consonantes){
-            return false;
-        }
+        
+        return encontrado;
     }
+
+    public static void cargar_matriz(){}
+    public static void cargar_arreglo(){}
+
+    public static void imprimir_matriz(){}
 }
